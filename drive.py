@@ -1,10 +1,11 @@
+import time
 from morseapi import MorseRobot
 from pynput.keyboard import Key, Listener
 bot = MorseRobot("E8:3C:9F:0E:20:60")
 
-global prev
-global speed = 0
-global rotational_speed = 0
+prev = None 
+speed = 0
+rotational_speed = 0
 
 def onPress(key):
 	global prev, speed, rotational_speed
@@ -47,14 +48,16 @@ def onRelease(key):
 		bot.drive(speed, rotational_speed)
 	prev = None
 	
-with Listener(on_press=onPress, on_release=onRelease, suppress=True) as l:
-	while True:
-		try:
+while True:
+	try:
+		with Listener(on_press=onPress, on_release=onRelease, suppress=True) as l:
 			prev = None
 			print ("Connecting...")
-			bot.reset()
 			bot.connect()
 			bot.say("hi")
 			l.join()
-		except e:
-
+	except NotConnectedError as e:
+		print(e)
+		time.sleep(1000)
+		
+			

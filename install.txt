@@ -1,0 +1,19 @@
+sudo apt-get install bluez
+wget https://github.com/IlyaSukhanov/morseapi/archive/master.zip
+unzip master.zip 
+sudo apt-get install python-setuptools
+pip install wheel
+sudo apt-get install libatlas3-base
+sudo apt-get install libblas3
+python setup.py bdist_wheel
+sudo apt-get install bluez
+sudo apt-get install libc-dev
+sudo apt-get install python-dev
+pip install numpy | less
+pip install -e .
+examples/clock.py C0:F0:84:3C:51:FA
+sudo apt-get install libbluetooth-dev
+pip install pybluez
+bluetoothctl
+examples/clock.py E8:3C:9F:0E:20:60
+examples/roam.py E8:3C:9F:0E:20:60

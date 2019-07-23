@@ -1,7 +1,7 @@
 import time
+import pygatt
 from morseapi import MorseRobot
 from pynput.keyboard import Key, Listener
-bot = MorseRobot("E8:3C:9F:0E:20:60")
 
 prev = None 
 speed = 0
@@ -47,17 +47,19 @@ def onRelease(key):
 		rotational_speed = 0
 		bot.drive(speed, rotational_speed)
 	prev = None
-	
-while True:
-	try:
-		with Listener(on_press=onPress, on_release=onRelease, suppress=True) as l:
-			prev = None
+
+with Listener(on_press=onPress, on_release=onRelease, suppress=True) as l:		
+	while True:
+		try:
 			print ("Connecting...")
+			bot = MorseRobot("E8:3C:9F:0E:20:60")
+			bot.reset()
 			bot.connect()
 			bot.say("hi")
-			l.join()
-	except NotConnectedError as e:
-		print(e)
-		time.sleep(1000)
+			prev = None
+			l.join()	
+		except pygatt.exceptions.NotConnectedError as e:
+			print(e)
+			time.sleep(1000)
 		
 			

@@ -237,7 +237,7 @@ class MorseRobot(GenericRobot):
         """
         self.command("drive", bytearray([0, 0, 0]))
 
-    def drive(self, speed):
+    def drive(self, speed, rotational_speed = 0):
         """
         Start moving Dash forward or backward.
 
@@ -250,11 +250,16 @@ class MorseRobot(GenericRobot):
         speed = max(-2048, speed)
         speed = min(2048, speed)
         if speed < 0:
-            speed = 0x800 + speed
+            speed = 0x800 + speed        
+        rotational_speed = max(-2048, rotational_speed)
+        rotational_speed = min(2048, rotational_speed)
+        if rotational_speed < 0:
+            rotational_speed = 0x800 + rotational_speed
         self.command("drive", bytearray([
             speed & 0xff,
-            0x00,
-            (speed & 0x0f00) >> 8
+            rotational_speed & 0xff,
+            (speed & 0x0f00) >> 8 |
+            (rotational_speed & 0x0f00) >> 5
         ]))
 
     def spin(self, speed):

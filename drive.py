@@ -1,15 +1,13 @@
 from morseapi import MorseRobot
 from pynput.keyboard import Key, Listener
-import random
 bot = MorseRobot("E8:3C:9F:0E:20:60")
-bot.reset()
-bot.connect()
-prev = None
 
-bot.say("hi")
+global prev
+global speed = 0
+global rotational_speed = 0
 
 def onPress(key):
-	global prev
+	global prev, speed, rotational_speed
 	if key == prev:
 		return
 	print ('Pressed {0}'.format(key))
@@ -17,20 +15,46 @@ def onPress(key):
 	if key == Key.esc:
 		bot.stop()
 		exit()
+	if key == Key.space:
+		bot.say("hi")
 	if key == Key.up:
-		bot.drive(200)
+		speed = 200
+		bot.drive(speed, rotational_speed)
 	if key == Key.down:
-		bot.drive(-200)
-	if key == Key.right:
-		bot.spin(-200)	
+		speed = -200
+		bot.drive(speed, rotational_speed)
 	if key == Key.left:
-		bot.spin(200)
+		rotational_speed = 200
+		bot.drive(speed, rotational_speed)
+	if key == Key.right:
+		rotational_speed = -200
+		bot.drive(speed, rotational_speed)
 		
 def onRelease(key):
-	global prev
+	global prev, speed, rotational_speed
 	print ('Released {0}'.format(key))
-	bot.stop()
+	if key == Key.up:
+		speed = 0
+		bot.drive(speed, rotational_speed)
+	if key == Key.down:
+		speed = 0
+		bot.drive(speed, rotational_speed)
+	if key == Key.left:
+		rotational_speed = 0
+		bot.drive(speed, rotational_speed)
+	if key == Key.right:
+		rotational_speed = 0
+		bot.drive(speed, rotational_speed)
 	prev = None
 	
 with Listener(on_press=onPress, on_release=onRelease, suppress=True) as l:
-	l.join()  
+	while True:
+		try:
+			prev = None
+			print ("Connecting...")
+			bot.reset()
+			bot.connect()
+			bot.say("hi")
+			l.join()
+		except e:
+
